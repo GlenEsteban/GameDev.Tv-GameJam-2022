@@ -10,19 +10,22 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float turnSmoothTime = 0.1f;
     [SerializeField] float jumpSpeed = 5f;
     CharacterManager characterManager;
+    GuardingBehaviour guardingBehaviour;
     Vector2 moveInput;
     Vector3 playerVelocity;
     Rigidbody rb;
     float turnSmoothVelocity;
-    [SerializeField] Boolean isCurrentCharacter = false;
-    Boolean isFollowing = false;
-    Boolean isGuarding = false;
+    Boolean isCurrentCharacter = false;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         characterManager = FindObjectOfType<CharacterManager>();
+        if (GetComponent<GuardingBehaviour>() != null)
+        {
+            guardingBehaviour = GetComponent<GuardingBehaviour>();
+        }
     }
 
     // Update is called once per frame
@@ -33,11 +36,14 @@ public class PlayerController : MonoBehaviour
 
     private void Run()
     {
-        if (isGuarding) {return;}
+        if (GetComponent<GuardingBehaviour>() != null && guardingBehaviour.GetIsGuarding()) {return;}
 
         // Moves player based on input
+        //if (playerVelocity.magnitude < maxRunSpeed)
+        {
             playerVelocity = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
             rb.velocity += playerVelocity * runSpeed;
+        }
 
         // Face direction of movement with smooth damping only if player is moving
         if (playerVelocity.magnitude >= Mathf.Epsilon)
@@ -60,18 +66,6 @@ public class PlayerController : MonoBehaviour
         {
             rb.velocity += new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z);
         }
-    }
-
-    void OnGuard()
-    {
-        isFollowing = false;
-        isGuarding = true;
-    }
-
-    void OnFollow()
-    {
-        isGuarding = false;
-        isFollowing = true;
     }
 
     void OnSwitchRight(InputValue value)
