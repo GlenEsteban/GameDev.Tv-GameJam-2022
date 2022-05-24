@@ -6,25 +6,17 @@ using UnityEngine.AI;
 
 public class FollowingBehaviour : MonoBehaviour
 {
+    [SerializeField] bool isFollowing = true;
+    
     CharacterManager characterManager;
     NavMeshAgent navMeshAgent;
     Transform target;
-    Boolean isFollowing = true;
 
-    public bool GetIsFollowing()
-    {
-        return isFollowing;
-    }
-
-    // Start is called before the first frame update
     void Start()
     {
         characterManager = FindObjectOfType<CharacterManager>();
         navMeshAgent = GetComponent<NavMeshAgent>();
-        UpdateCurrentCharacter();
     }
-
-    // Update is called once per frame
     void Update()
     {
         UpdateCurrentCharacter();
