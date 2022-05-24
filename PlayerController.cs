@@ -6,29 +6,27 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] float runSpeed = .2f;
-    [SerializeField] float turnSmoothTime = 0.1f;
-    [SerializeField] float jumpSpeed = 5f;
+    [SerializeField] bool isCurrentCharacter = false;
+    [SerializeField] float runSpeed = 1f;
+    [SerializeField] float turnSmoothTime = 0.2f;
+
     CharacterManager characterManager;
     GuardingBehaviour guardingBehaviour;
+    Rigidbody thisRigidBody;
     Vector2 moveInput;
     Vector3 playerVelocity;
-    Rigidbody rb;
     float turnSmoothVelocity;
-    Boolean isCurrentCharacter = false;
 
-    // Start is called before the first frame update
+
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        thisRigidBody = GetComponent<Rigidbody>();
         characterManager = FindObjectOfType<CharacterManager>();
         if (GetComponent<GuardingBehaviour>() != null)
         {
             guardingBehaviour = GetComponent<GuardingBehaviour>();
         }
     }
-
-    // Update is called once per frame
     void Update()
     {
         Run();
@@ -38,14 +36,11 @@ public class PlayerController : MonoBehaviour
     {
         if (GetComponent<GuardingBehaviour>() != null && guardingBehaviour.GetIsGuarding()) {return;}
 
-        // Moves player based on input
-        //if (playerVelocity.magnitude < maxRunSpeed)
         {
             playerVelocity = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
-            rb.velocity += playerVelocity * runSpeed;
+            thisRigidBody.velocity += playerVelocity * runSpeed;
         }
 
-        // Face direction of movement with smooth damping only if player is moving
         if (playerVelocity.magnitude >= Mathf.Epsilon)
         {
             float targetAngle = Mathf.Atan2(playerVelocity.x, playerVelocity.z) * Mathf.Rad2Deg;
@@ -56,16 +51,7 @@ public class PlayerController : MonoBehaviour
 
     void OnMove(InputValue value) 
     {
-        // Updates my moveInput member variable
         moveInput = value.Get<Vector2>();
-    }
-
-    void OnJump(InputValue value)
-    {
-        if (value.isPressed)
-        {
-            rb.velocity += new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z);
-        }
     }
 
     void OnSwitchRight(InputValue value)
@@ -84,7 +70,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void SetToCurrentCharacter(Boolean value)
+    public void SetToCurrentCharacter(bool value)
     { 
         isCurrentCharacter = value;
     }
@@ -93,7 +79,7 @@ public class PlayerController : MonoBehaviour
     {
         GetComponent<PlayerInput>().DeactivateInput();
     }
-        public void ActivateControls()
+    public void ActivateControls()
     {
         GetComponent<PlayerInput>().ActivateInput();
     }

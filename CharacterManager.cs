@@ -5,10 +5,12 @@ using Cinemachine;
 
 public class CharacterManager : MonoBehaviour
 {
+    [SerializeField] int currentCharacterIndex = 0;
     [SerializeField] List<GameObject> characters;
     [SerializeField] CinemachineTargetGroup targetGroup;
-    int currentCharacterIndex = 0;
+
     GameObject currentCharacter;
+
     public GameObject GetCurrentCharacter()
     {
         return characters[currentCharacterIndex];
