@@ -7,15 +7,18 @@ using UnityEngine.InputSystem;
 
 public class AIController : MonoBehaviour
 {
+    [Header("Attack State Configurations")]
+    [SerializeField] GameObject weapon;
+    [SerializeField] Transform weaponSpawnPoint;
     [SerializeField] float chaseDistance = 6f;
-    [SerializeField] float timeBetweenAttacks = 2f;
+    [SerializeField] float timeBetweenAttacks = 1f;
     bool isCurrentCharacter;
     bool isStaying = false;
     bool isAttacking = false;
     float timeSinceLastAttack;
     CharacterManager characterManager;
     NavMeshAgent navMeshAgent;
-    Transform target;
+    Transform targetDestination;
 
     public bool GetIsStaying()
     {
@@ -32,6 +35,7 @@ public class AIController : MonoBehaviour
     void Update()
     {
         CheckIfCurrentCharacter();
+        timeSinceLastAttack += Time.deltaTime;
 
         if (!isCurrentCharacter && !isStaying && !isAttacking)
         {
@@ -63,16 +67,16 @@ public class AIController : MonoBehaviour
             isStaying = !isStaying;
         }
     }
+
     void OnTriggerStay(Collider other) 
     {
         if (isStaying || isCurrentCharacter) return;
         if (other.tag == "Enemy")
         {
             isAttacking = true;
-            StartAttacking(other.transform.position);
+            StartAttacking(other.gameObject);
         }
     }
-
     void OnTriggerExit(Collider other) 
     {
         isAttacking = false;
@@ -80,20 +84,34 @@ public class AIController : MonoBehaviour
 
     void UpdateTarget()
     {
-        if (target != characterManager.GetCurrentCharacter())
+        if (targetDestination != characterManager.GetCurrentCharacter())
         {
-            target = characterManager.GetCurrentCharacter().transform;
+            targetDestination = characterManager.GetCurrentCharacter().transform;
         }
     }
+
     void StartFollowing()
     {
         navMeshAgent.enabled = true;
-        navMeshAgent.destination = target.position;
+        navMeshAgent.destination = targetDestination.position;
+        FaceTarget(targetDestination);
     }
-    void StartAttacking(Vector3 attackTarget)
+    void FaceTarget(Transform target)
     {
+        transform.LookAt(target.transform); // Fix bug where it rotates instantly
+    }
+    void StartAttacking(GameObject target)
+    {
+        navMeshAgent.destination = target.transform.position;
+        FaceTarget(target.transform);
 
-        navMeshAgent.destination = attackTarget; 
+        if (timeSinceLastAttack > timeBetweenAttacks)
+        {
+            Vector3 weaponSpawnPosition = weaponSpawnPoint.transform.position;
+            Instantiate(weapon, weaponSpawnPosition, transform.rotation);
+
+            timeSinceLastAttack = 0;
+        }
     }
     void StopFollowing()
     {
