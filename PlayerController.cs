@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float turnSmoothTime = 0.2f;
 
     CharacterManager characterManager;
-    AIBehaviour followingBehaviour;
+    AIController AIController;
     Rigidbody thisRigidBody;
     Vector2 moveInput;
     Vector3 playerVelocity;
@@ -21,9 +21,9 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         characterManager = FindObjectOfType<CharacterManager>();
-        if (GetComponent<AIBehaviour>() != null)
+        if (GetComponent<AIController>() != null)
         {
-            followingBehaviour = GetComponent<AIBehaviour>();
+            AIController = GetComponent<AIController>();
         }
         thisRigidBody = GetComponent<Rigidbody>();
     }
@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
 
     private void MoveCharacter()
     {
-        if (GetComponent<AIBehaviour>() != null && followingBehaviour.GetIsStaying()) {return;}
+        if (GetComponent<AIController>() != null && AIController.GetIsStaying()) {return;}
 
         {
             playerVelocity = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
