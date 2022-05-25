@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Movement Configurations")]
     [SerializeField] float moveSpeed = 1f;
     [SerializeField] float turnSmoothTime = 0.2f;
     bool isCurrentCharacter = false;
@@ -52,6 +53,11 @@ public class PlayerController : MonoBehaviour
         moveInput = value.Get<Vector2>();
     }
 
+    void DoSpecialAbility()
+    {
+        
+    }
+
     void OnSwitchRight(InputValue value)
     {
         if (value.isPressed)
@@ -66,9 +72,9 @@ public class PlayerController : MonoBehaviour
             characterManager.SwitchLeft();
         }
     }
-    public void SetToCurrentCharacter(bool value)
+    public void SetToCurrentCharacter(bool state)
     { 
-        isCurrentCharacter = value;
+        isCurrentCharacter = state;
     }
 
     public void DeactivateControls()
