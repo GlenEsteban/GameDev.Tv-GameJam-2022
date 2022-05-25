@@ -7,11 +7,11 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] bool isCurrentCharacter = false;
-    [SerializeField] float runSpeed = 1f;
+    [SerializeField] float moveSpeed = 1f;
     [SerializeField] float turnSmoothTime = 0.2f;
 
     CharacterManager characterManager;
-    GuardingBehaviour guardingBehaviour;
+    AIBehaviour followingBehaviour;
     Rigidbody thisRigidBody;
     Vector2 moveInput;
     Vector3 playerVelocity;
@@ -20,25 +20,25 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        thisRigidBody = GetComponent<Rigidbody>();
         characterManager = FindObjectOfType<CharacterManager>();
-        if (GetComponent<GuardingBehaviour>() != null)
+        if (GetComponent<AIBehaviour>() != null)
         {
-            guardingBehaviour = GetComponent<GuardingBehaviour>();
+            followingBehaviour = GetComponent<AIBehaviour>();
         }
+        thisRigidBody = GetComponent<Rigidbody>();
     }
     void Update()
     {
-        Run();
+        MoveCharacter();
     }
 
-    private void Run()
+    private void MoveCharacter()
     {
-        if (GetComponent<GuardingBehaviour>() != null && guardingBehaviour.GetIsGuarding()) {return;}
+        if (GetComponent<AIBehaviour>() != null && followingBehaviour.GetIsStaying()) {return;}
 
         {
             playerVelocity = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
-            thisRigidBody.velocity += playerVelocity * runSpeed;
+            thisRigidBody.velocity += playerVelocity * moveSpeed;
         }
 
         if (playerVelocity.magnitude >= Mathf.Epsilon)
@@ -61,7 +61,6 @@ public class PlayerController : MonoBehaviour
             characterManager.SwitchRight();
         }
     }
-
     void OnSwitchLeft(InputValue value)
     {
         if (value.isPressed)
@@ -69,7 +68,6 @@ public class PlayerController : MonoBehaviour
             characterManager.SwitchLeft();
         }
     }
-
     public void SetToCurrentCharacter(bool value)
     { 
         isCurrentCharacter = value;
