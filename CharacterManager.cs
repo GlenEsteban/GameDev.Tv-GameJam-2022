@@ -45,7 +45,7 @@ public class CharacterManager : MonoBehaviour
         {
             currentCharacterIndex = characters.Count - 1;
         }
-        
+
         UpdatePlayerController();
         UpdateCinemachineTargetGroup();
     }

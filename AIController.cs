@@ -7,10 +7,12 @@ using UnityEngine.InputSystem;
 
 public class AIController : MonoBehaviour
 {
-    [SerializeField] float chaseDistance = 5f;
+    [SerializeField] float chaseDistance = 6f;
+    [SerializeField] float timeBetweenAttacks = 2f;
     bool isCurrentCharacter;
     bool isStaying = false;
     bool isAttacking = false;
+    float timeSinceLastAttack;
     CharacterManager characterManager;
     NavMeshAgent navMeshAgent;
     Transform target;
@@ -36,7 +38,7 @@ public class AIController : MonoBehaviour
             UpdateTarget();
             StartFollowing();
         }
-        else if (!isAttacking)
+        else if (isCurrentCharacter || isStaying && !isAttacking)
         {
             StopFollowing();
         }
@@ -71,6 +73,11 @@ public class AIController : MonoBehaviour
         }
     }
 
+    void OnTriggerExit(Collider other) 
+    {
+        isAttacking = false;
+    }
+
     void UpdateTarget()
     {
         if (target != characterManager.GetCurrentCharacter())
@@ -85,6 +92,7 @@ public class AIController : MonoBehaviour
     }
     void StartAttacking(Vector3 attackTarget)
     {
+
         navMeshAgent.destination = attackTarget; 
     }
     void StopFollowing()
