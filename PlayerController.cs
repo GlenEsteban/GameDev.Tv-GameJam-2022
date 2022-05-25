@@ -6,17 +6,15 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] bool isCurrentCharacter = false;
     [SerializeField] float moveSpeed = 1f;
     [SerializeField] float turnSmoothTime = 0.2f;
-
+    bool isCurrentCharacter = false;
+    float turnSmoothVelocity;
     CharacterManager characterManager;
     AIController AIController;
     Rigidbody thisRigidBody;
     Vector2 moveInput;
     Vector3 playerVelocity;
-    float turnSmoothVelocity;
-
 
     void Start()
     {
