@@ -18,7 +18,7 @@ public class CharacterManager : MonoBehaviour
 
     void Start()
     {
-        UpdatePlayerControl();
+        UpdatePlayerController();
     }
     public void SwitchRight()
     {
@@ -31,7 +31,7 @@ public class CharacterManager : MonoBehaviour
             currentCharacterIndex = 0;
         }
 
-        UpdatePlayerControl();
+        UpdatePlayerController();
         UpdateCinemachineTargetGroup();
     }
 
@@ -46,11 +46,11 @@ public class CharacterManager : MonoBehaviour
             currentCharacterIndex = characters.Count - 1;
         }
         
-        UpdatePlayerControl();
+        UpdatePlayerController();
         UpdateCinemachineTargetGroup();
     }
     
-    void UpdatePlayerControl()
+    void UpdatePlayerController()
     {
         foreach (GameObject character in characters)
         {
