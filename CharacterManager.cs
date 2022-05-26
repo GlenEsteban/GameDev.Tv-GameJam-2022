@@ -10,6 +10,7 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] CinemachineTargetGroup targetGroup;
 
     GameObject currentCharacter;
+    Health health;
 
     public GameObject GetCurrentCharacter()
     {
@@ -20,6 +21,28 @@ public class CharacterManager : MonoBehaviour
     {
         UpdatePlayerController();
     }
+
+    public void AddCharacter(GameObject character)
+    {
+        characters.Add(character);
+        health = character.GetComponent<Health>();
+        health.SetCharacterIndex(characters.Count - 1);
+
+        UpdatePlayerController();
+        UpdateCinemachineTargetGroup();
+    }
+    public void RemoveCharacter(GameObject character)
+    {
+        print("theres something wrong");
+        // recalculate character index
+
+        health = character.GetComponent<Health>();
+        characters.RemoveAt(health.GetCharacterIndex());
+
+        UpdatePlayerController();
+        UpdateCinemachineTargetGroup();
+    }
+
     public void SwitchRight()
     {
         if (characters.Count > 1 && currentCharacterIndex < characters.Count - 1)
@@ -34,7 +57,6 @@ public class CharacterManager : MonoBehaviour
         UpdatePlayerController();
         UpdateCinemachineTargetGroup();
     }
-
     public void SwitchLeft()
     {
         if (characters.Count > 1 && currentCharacterIndex > 0)
@@ -49,7 +71,6 @@ public class CharacterManager : MonoBehaviour
         UpdatePlayerController();
         UpdateCinemachineTargetGroup();
     }
-    
     void UpdatePlayerController()
     {
         foreach (GameObject character in characters)
@@ -68,9 +89,16 @@ public class CharacterManager : MonoBehaviour
             }
         }
     }
-
     void UpdateCinemachineTargetGroup()
     {
+        List<CinemachineTargetGroup.Target> targets = new List<CinemachineTargetGroup.Target>();
+        targetGroup.m_Targets = targets.ToArray();
+
+        foreach (GameObject character in characters)
+        {
+            targetGroup.AddMember(character.transform, 0f, 0f);
+        }
+
         for (int i = 0; i < targetGroup.m_Targets.Length; i++)
         {
             if (i == currentCharacterIndex)

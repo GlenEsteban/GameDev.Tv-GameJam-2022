@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
             AIController = GetComponent<AIController>();
         }
         thisRigidBody = GetComponent<Rigidbody>();
+        
+        characterManager.AddCharacter(gameObject);
     }
     void Update()
     {
@@ -51,11 +53,6 @@ public class PlayerController : MonoBehaviour
     void OnMove(InputValue value) 
     {
         moveInput = value.Get<Vector2>();
-    }
-
-    void DoSpecialAbility()
-    {
-        
     }
 
     void OnSwitchRight(InputValue value)
