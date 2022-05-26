@@ -7,11 +7,10 @@ using UnityEngine.InputSystem;
 
 public class AIController : MonoBehaviour
 {
-    [Header("Attack State Configurations")]
-    [SerializeField] GameObject weapon;
-    [SerializeField] Transform weaponSpawnPoint;
+    [Header("Attack Configurations")]
     [SerializeField] float chaseDistance = 6f;
     [SerializeField] float timeBetweenAttacks = 1f;
+
     bool isCurrentCharacter;
     bool isStaying = false;
     bool isAttacking = false;
@@ -76,6 +75,10 @@ public class AIController : MonoBehaviour
             isAttacking = true;
             StartAttacking(other.gameObject);
         }
+        else
+        {
+            isAttacking = false;
+        }
     }
     void OnTriggerExit(Collider other) 
     {
@@ -94,7 +97,7 @@ public class AIController : MonoBehaviour
     {
         navMeshAgent.enabled = true;
         navMeshAgent.destination = targetDestination.position;
-        FaceTarget(targetDestination);
+        //FaceTarget(targetDestination); // Fix bug where it rotates instantly
     }
     void FaceTarget(Transform target)
     {
@@ -102,13 +105,15 @@ public class AIController : MonoBehaviour
     }
     void StartAttacking(GameObject target)
     {
-        navMeshAgent.destination = target.transform.position;
-        FaceTarget(target.transform);
+        if (navMeshAgent.enabled != false)
+        {
+            navMeshAgent.destination = target.transform.position;
+            FaceTarget(target.transform);
+        }
 
         if (timeSinceLastAttack > timeBetweenAttacks)
         {
-            Vector3 weaponSpawnPosition = weaponSpawnPoint.transform.position;
-            Instantiate(weapon, weaponSpawnPosition, transform.rotation);
+            BroadcastMessage("Ability");
 
             timeSinceLastAttack = 0;
         }
