@@ -37,7 +37,16 @@ public class Health : MonoBehaviour
     void OnCollisionEnter(Collision other) {
         if(other.gameObject.tag == "Projectile")
         {
+            print(gameObject.name + " got hurt by " + other.gameObject.name);
+            
             float damageTaken = other.gameObject.GetComponent<Projectile>().GetDamage();
+            TakeDamage(damageTaken);
+        }
+        if(other.gameObject.tag == "Melee")
+        {
+            print(gameObject.name + " got hurt by " + other.gameObject.name);
+
+            float damageTaken = other.gameObject.GetComponent<Melee>().GetDamage();
             TakeDamage(damageTaken);
         }
     }
