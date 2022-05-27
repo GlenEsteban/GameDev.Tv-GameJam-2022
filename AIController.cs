@@ -10,11 +10,14 @@ public class AIController : MonoBehaviour
     [Header("Attack Configurations")]
     [SerializeField] float chaseDistance = 6f;
     [SerializeField] float timeBetweenAttacks = 1f;
+    [Tooltip("Each simple attack adds a charge.")]
+    [SerializeField] int chargeRequiredTillSpecial = 3;
 
     bool isCurrentCharacter;
     bool isStaying = false;
     bool isAttacking = false;
     float timeSinceLastAttack;
+    int specialAttackChargeUp;
     CharacterManager characterManager;
     Health health;
     NavMeshAgent navMeshAgent;
@@ -73,8 +76,20 @@ public class AIController : MonoBehaviour
 
     void OnTriggerStay(Collider other) 
     {
-        if (isStaying || isCurrentCharacter) return;
-        if (other.tag == "Enemy")
+        if (isCurrentCharacter) {return;}
+
+        if (other.GetComponent<Health>() != null && other.GetComponent<Health>().GetIsDead())
+        {
+            isAttacking = false;
+            return;
+        }
+
+        if (tag == "Follower" && other.tag == "Enemy")
+        {
+            isAttacking = true;
+            StartAttacking(other.gameObject);
+        }
+        else if (tag == "Enemy" && other.tag == "Necromancer" || other.tag == "Follower")
         {
             isAttacking = true;
             StartAttacking(other.gameObject);
@@ -117,7 +132,16 @@ public class AIController : MonoBehaviour
 
         if (timeSinceLastAttack > timeBetweenAttacks)
         {
-            BroadcastMessage("Ability");
+            if (specialAttackChargeUp == chargeRequiredTillSpecial)
+            {
+                BroadcastMessage("SpecialAbility");
+                specialAttackChargeUp = 0;
+            }
+            else
+            {
+                BroadcastMessage("Ability");
+                specialAttackChargeUp ++;
+            }
 
             timeSinceLastAttack = 0;
         }

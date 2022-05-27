@@ -5,8 +5,4 @@ using UnityEngine;
 public class EnemyAIController : MonoBehaviour
 {
     
-    void Update()
-    {
-        
-    }
 }

@@ -17,7 +17,12 @@ public class NecromancerAbilities : MonoBehaviour
     {
         health = GetComponent<Health>();    
     }
-    void OnSpecial(InputValue value)
+
+    void OnAbility()
+    {
+        print("abilty");
+    }
+    void OnSpecialAbility(InputValue value)
     {
         if (health.GetIsDead()) {return;}
         if (value.isPressed)
