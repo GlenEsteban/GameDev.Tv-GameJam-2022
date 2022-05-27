@@ -16,6 +16,7 @@ public class AIController : MonoBehaviour
     bool isAttacking = false;
     float timeSinceLastAttack;
     CharacterManager characterManager;
+    Health health;
     NavMeshAgent navMeshAgent;
     Transform targetDestination;
 
@@ -27,12 +28,15 @@ public class AIController : MonoBehaviour
     void Start()
     {
         characterManager = FindObjectOfType<CharacterManager>();
+        health = GetComponent<Health>();
         navMeshAgent = GetComponent<NavMeshAgent>();
 
         GetComponent<SphereCollider>().radius = chaseDistance;
     }
     void Update()
     {
+        if (health.GetIsDead()) {return;}
+
         CheckIfCurrentCharacter();
         timeSinceLastAttack += Time.deltaTime;
 

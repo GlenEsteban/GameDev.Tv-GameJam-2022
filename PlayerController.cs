@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     bool isCurrentCharacter = false;
     float turnSmoothVelocity;
     CharacterManager characterManager;
+    Health health;
     AIController AIController;
     Rigidbody thisRigidBody;
     Vector2 moveInput;
@@ -20,6 +21,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         characterManager = FindObjectOfType<CharacterManager>();
+        health = GetComponent<Health>();
         if (GetComponent<AIController>() != null)
         {
             AIController = GetComponent<AIController>();
@@ -30,6 +32,7 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
+        if (health.GetIsDead()) {return;}
         MoveCharacter();
     }
 

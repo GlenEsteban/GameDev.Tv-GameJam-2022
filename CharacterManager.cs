@@ -9,9 +9,6 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] List<GameObject> characters;
     [SerializeField] CinemachineTargetGroup targetGroup;
 
-    GameObject currentCharacter;
-    Health health;
-
     public GameObject GetCurrentCharacter()
     {
         return characters[currentCharacterIndex];
@@ -21,26 +18,21 @@ public class CharacterManager : MonoBehaviour
     {
         UpdatePlayerController();
     }
-
+    
     public void AddCharacter(GameObject character)
     {
         characters.Add(character);
-        health = character.GetComponent<Health>();
-        health.SetCharacterIndex(characters.Count - 1);
-
-        UpdatePlayerController();
-        UpdateCinemachineTargetGroup();
+        UpdateCharacterInControl();
     }
     public void RemoveCharacter(GameObject character)
     {
-        print("theres something wrong");
-        // recalculate character index
-
-        health = character.GetComponent<Health>();
-        characters.RemoveAt(health.GetCharacterIndex());
-
-        UpdatePlayerController();
-        UpdateCinemachineTargetGroup();
+        ResetCurrentCharacter();
+        characters.Remove(character);
+        UpdateCharacterInControl();
+    }
+    void ResetCurrentCharacter()
+    {
+        currentCharacterIndex = 0;
     }
 
     public void SwitchRight()
@@ -54,8 +46,7 @@ public class CharacterManager : MonoBehaviour
             currentCharacterIndex = 0;
         }
 
-        UpdatePlayerController();
-        UpdateCinemachineTargetGroup();
+        UpdateCharacterInControl();
     }
     public void SwitchLeft()
     {
@@ -68,6 +59,11 @@ public class CharacterManager : MonoBehaviour
             currentCharacterIndex = characters.Count - 1;
         }
 
+        UpdateCharacterInControl();
+    }
+
+    void UpdateCharacterInControl()
+    {
         UpdatePlayerController();
         UpdateCinemachineTargetGroup();
     }
