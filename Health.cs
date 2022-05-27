@@ -10,23 +10,14 @@ public class Health : MonoBehaviour
     [SerializeField] float currentHealth;
     [SerializeField] float deathDecayTime = 1f;
     [SerializeField] bool isDead;
-    [SerializeField] bool isRemoved;
+    [SerializeField] bool hasHandledDeath;
     [SerializeField] GameObject corpsePrefab;
     CharacterManager characterManager;
-    public int characterIndex = -1;
     float timeSinceDeath;
 
     public bool GetIsDead()
     {
         return isDead;
-    }
-        public void SetCharacterIndex(int index)
-    {
-        characterIndex = index;
-    }
-        public int GetCharacterIndex()
-    {
-        return characterIndex;
     }
     void Start()
     {
@@ -54,22 +45,39 @@ public class Health : MonoBehaviour
     {
         currentHealth = Mathf.Max(currentHealth - damage, 0);
     }
+
     void HandleDeath()
     {
-        if (!isRemoved && tag == "Player")
-        {
-            print("removed");
-            characterManager.RemoveCharacter(gameObject);
-            isRemoved = true;
-        }
-
+        HandleFollowerDeath();
+        HandleNecromancerDeath();
         HandleDeathPhysics();
+
         timeSinceDeath += Time.deltaTime;
 
-        if (timeSinceDeath > deathDecayTime)
+        if (!hasHandledDeath && timeSinceDeath > deathDecayTime)
         {
             DropCorpse();
-            Destroy(gameObject);
+            if (tag != "Necromancer")
+            {
+                Destroy(gameObject);
+            }
+            hasHandledDeath = true;
+        }
+
+
+    }
+    private void HandleFollowerDeath()
+    {
+        if (!hasHandledDeath && tag == "Follower")
+        {
+            characterManager.RemoveCharacter(gameObject);
+        }
+    }
+        private void HandleNecromancerDeath()
+    {
+        if (!hasHandledDeath && tag == "Necromancer")
+        {
+            // Special Game Over Death Sequence
         }
     }
     void HandleDeathPhysics()
@@ -79,6 +87,7 @@ public class Health : MonoBehaviour
             GetComponent<NavMeshAgent>().enabled = false;
         }
         GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+
         transform.Rotate(.5f, 0f, 0f);
     }
     void DropCorpse()
