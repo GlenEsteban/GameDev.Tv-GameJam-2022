@@ -54,7 +54,7 @@ public class NecromancerAbilities : MonoBehaviour
         if (followerPrefabIndex != -1)
         {
             Vector3 followerSpawnPosition = followerSpawnPoint.transform.position;
-            Instantiate(followerPrefabs[followerPrefabIndex], followerSpawnPosition, followerSpawnPoint.rotation);
+            Instantiate(followerPrefabs[followerPrefabIndex], followerSpawnPosition, followerSpawnPoint.rotation, gameObject.transform);
             Destroy(corpse);
         }
         else

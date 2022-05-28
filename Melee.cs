@@ -22,6 +22,7 @@ public class Melee : MonoBehaviour
     
     private void Update() {
         transform.position = weaponUser.transform.position;
+        transform.rotation = weaponUser.transform.rotation;
     }
     void OnCollisionEnter(Collision other) 
     {

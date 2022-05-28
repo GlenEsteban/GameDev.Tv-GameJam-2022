@@ -16,15 +16,35 @@ public class Abilities : MonoBehaviour
     [SerializeField] Transform specialSpawnPoint;
     [SerializeField] bool isHealthConsuming;
     [SerializeField] float healthConsumed = 1f;
+    [Tooltip("Each simple attack adds a charge.")]
+    [SerializeField] int chargeRequiredTillSpecial = 2;
     Health health;
+    int specialAttackChargeUp;
+
+    public int GetChargeRequiredTillSpecial()
+    {
+        return chargeRequiredTillSpecial;
+    }
+
     void Start() 
     {
         health = GetComponent<Health>();
     }
     void OnAbility()
     {
-        Ability();
-        print(gameObject + "used ability!!");
+
+        if (specialAttackChargeUp < chargeRequiredTillSpecial)
+        {
+            Ability();
+            specialAttackChargeUp ++;
+        }
+        else
+        {
+            SpecialAbility();
+            specialAttackChargeUp = 0;
+        }
+
+
     }
     public void Ability()
     {
@@ -46,12 +66,6 @@ public class Abilities : MonoBehaviour
         {
             GetComponent<Health>().TakeDamage(healthConsumed);
         }
-    }
-
-    void OnSpecial()
-    {
-        SpecialAbility();
-        print(gameObject.name + "used a special attack!");
     }
 
     public void SpecialAbility()

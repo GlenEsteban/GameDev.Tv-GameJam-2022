@@ -101,6 +101,7 @@ public class Health : MonoBehaviour
     }
     void DropCorpse()
     {
+        if (tag == "Necromancer") {return;}
         Instantiate(corpsePrefab, transform.position, transform.rotation);
     }
 }

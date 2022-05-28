@@ -10,9 +10,6 @@ public class AIController : MonoBehaviour
     [Header("Attack Configurations")]
     [SerializeField] float chaseDistance = 6f;
     [SerializeField] float timeBetweenAttacks = 1f;
-    [Tooltip("Each simple attack adds a charge.")]
-    [SerializeField] int chargeRequiredTillSpecial = 3;
-
     bool isCurrentCharacter;
     bool isStaying = false;
     bool isAttacking = false;
@@ -20,6 +17,7 @@ public class AIController : MonoBehaviour
     int specialAttackChargeUp;
     CharacterManager characterManager;
     Health health;
+    Abilities abilities;
     NavMeshAgent navMeshAgent;
     Transform targetDestination;
 
@@ -32,9 +30,22 @@ public class AIController : MonoBehaviour
     {
         characterManager = FindObjectOfType<CharacterManager>();
         health = GetComponent<Health>();
+        abilities = GetComponent<Abilities>();
         navMeshAgent = GetComponent<NavMeshAgent>();
 
         GetComponent<SphereCollider>().radius = chaseDistance;
+
+        if (transform.parent.tag == "Necromancer")
+        {
+            tag = "Follower";
+            transform.parent = FindObjectOfType<CharacterManager>().transform;
+            GetComponent<PlayerInput>().enabled = true;
+            GetComponent<PlayerController>().enabled = true;
+        }
+        else
+        {
+            tag = "Enemy";
+        }
     }
     void Update()
     {
@@ -93,8 +104,12 @@ public class AIController : MonoBehaviour
         {
             if (other.tag == "Necromancer" || other.tag == "Follower")
             {
-                isAttacking = true;
-                StartAttacking(other.gameObject);
+                float distanceToTarget = Vector2.Distance(transform.position, targetDestination.position);
+                if (distanceToTarget < navMeshAgent.stoppingDistance)
+                {
+                    isAttacking = true;
+                    StartAttacking(other.gameObject);
+                }
             }
         }
         else
@@ -105,13 +120,18 @@ public class AIController : MonoBehaviour
     void OnTriggerExit(Collider other) 
     {
         isAttacking = false;
+        StartFollowing();
     }
 
     void UpdateTarget()
     {
-        if (targetDestination != characterManager.GetCurrentCharacter())
+        if (tag == "Follower" && targetDestination != characterManager.GetCurrentCharacter())
         {
             targetDestination = characterManager.GetCurrentCharacter().transform;
+        }
+        else if (tag == "Enemy")
+        {
+            targetDestination = transform;
         }
     }
 
@@ -135,7 +155,7 @@ public class AIController : MonoBehaviour
 
         if (timeSinceLastAttack > timeBetweenAttacks)
         {
-            if (specialAttackChargeUp == chargeRequiredTillSpecial)
+            if (specialAttackChargeUp == abilities.GetChargeRequiredTillSpecial())
             {
                 BroadcastMessage("SpecialAbility");
                 specialAttackChargeUp = 0;
