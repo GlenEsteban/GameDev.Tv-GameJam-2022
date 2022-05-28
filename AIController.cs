@@ -89,10 +89,13 @@ public class AIController : MonoBehaviour
             isAttacking = true;
             StartAttacking(other.gameObject);
         }
-        else if (tag == "Enemy" && other.tag == "Necromancer" || other.tag == "Follower")
+        else if (tag == "Enemy")
         {
-            isAttacking = true;
-            StartAttacking(other.gameObject);
+            if (other.tag == "Necromancer" || other.tag == "Follower")
+            {
+                isAttacking = true;
+                StartAttacking(other.gameObject);
+            }
         }
         else
         {

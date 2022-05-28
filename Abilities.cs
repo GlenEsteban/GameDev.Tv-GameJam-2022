@@ -24,6 +24,7 @@ public class Abilities : MonoBehaviour
     void OnAbility()
     {
         Ability();
+        print(gameObject + "used ability!!");
     }
     public void Ability()
     {
@@ -38,7 +39,7 @@ public class Abilities : MonoBehaviour
         if (isAbilityMelee)
         {
             Vector3 abilitySpawnPosition = abilitySpawnPoint.transform.position;
-            Instantiate(abilityPrefab, abilitySpawnPosition, transform.rotation);
+            Instantiate(abilityPrefab, abilitySpawnPosition, transform.rotation, abilitySpawnPoint);
         }
 
         if (isHealthConsuming)
@@ -47,7 +48,7 @@ public class Abilities : MonoBehaviour
         }
     }
 
-    void OnSpecialAblity()
+    void OnSpecial()
     {
         SpecialAbility();
         print(gameObject.name + "used a special attack!");
