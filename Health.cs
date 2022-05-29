@@ -9,8 +9,10 @@ public class Health : MonoBehaviour
     [SerializeField] float startingHealth = 10f;
     [SerializeField] float currentHealth;
     [SerializeField] float deathDecayTime = 1f;
-    [SerializeField] bool isDead;
-    [SerializeField] bool hasHandledDeath;
+    [SerializeField] float lingerOnDeathTime = 3f;
+
+    bool isDead;
+    bool hasHandledDeath;
     [SerializeField] GameObject corpsePrefab;
     CharacterManager characterManager;
     float timeSinceDeath;
@@ -65,9 +67,9 @@ public class Health : MonoBehaviour
 
         if (!hasHandledDeath && timeSinceDeath > deathDecayTime)
         {
-            DropCorpse();
             if (tag != "Necromancer")
             {
+                DropCorpse();
                 Destroy(gameObject);
             }
             hasHandledDeath = true;
@@ -75,19 +77,30 @@ public class Health : MonoBehaviour
 
 
     }
-    private void HandleFollowerDeath()
+    void HandleFollowerDeath()
     {
         if (!hasHandledDeath && tag == "Follower")
         {
+            if (characterManager.GetCurrentCharacter() == gameObject)
+            {
+                characterManager.ResetCurrentCharacter();
+            }
             characterManager.RemoveCharacter(gameObject);
         }
     }
-        private void HandleNecromancerDeath()
+    void HandleNecromancerDeath()
     {
         if (!hasHandledDeath && tag == "Necromancer")
         {
-            // Special Game Over Death Sequence
+            characterManager.ResetCurrentCharacter();
+            characterManager.UpdateCharacterInControl();
+            StartCoroutine(LingerOnDeath());
         }
+    }
+    IEnumerator LingerOnDeath()
+    {
+        yield return new WaitForSeconds(lingerOnDeathTime);
+        FindObjectOfType<SceneLoader>().RestartLevel();
     }
     void HandleDeathPhysics()
     {
@@ -101,7 +114,6 @@ public class Health : MonoBehaviour
     }
     void DropCorpse()
     {
-        if (tag == "Necromancer") {return;}
         Instantiate(corpsePrefab, transform.position, transform.rotation);
     }
 }
