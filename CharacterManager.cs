@@ -26,11 +26,10 @@ public class CharacterManager : MonoBehaviour
     }
     public void RemoveCharacter(GameObject character)
     {
-        ResetCurrentCharacter();
         characters.Remove(character);
         UpdateCharacterInControl();
     }
-    void ResetCurrentCharacter()
+    public void ResetCurrentCharacter()
     {
         currentCharacterIndex = 0;
     }
@@ -62,7 +61,7 @@ public class CharacterManager : MonoBehaviour
         UpdateCharacterInControl();
     }
 
-    void UpdateCharacterInControl()
+    public void UpdateCharacterInControl()
     {
         UpdatePlayerController();
         UpdateCinemachineTargetGroup();
