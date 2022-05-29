@@ -50,6 +50,11 @@ public class Health : MonoBehaviour
 
             float damageTaken = other.gameObject.GetComponent<Melee>().GetDamage();
             TakeDamage(damageTaken);
+
+            if (other.gameObject.GetComponent<Rigidbody>() != null)
+            {
+                other.gameObject.GetComponent<Rigidbody>().velocity -= transform.forward * 100;
+            }
         }
     }
         public void TakeDamage(float damage)

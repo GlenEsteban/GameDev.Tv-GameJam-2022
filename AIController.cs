@@ -25,6 +25,10 @@ public class AIController : MonoBehaviour
     {
         return isStaying;
     }
+    public float GetTimeBetweenAttacks()
+    {
+        return timeBetweenAttacks;
+    }
 
     void Start()
     {
@@ -53,7 +57,6 @@ public class AIController : MonoBehaviour
 
         CheckIfCurrentCharacter();
         timeSinceLastAttack += Time.deltaTime;
-
         if (!isCurrentCharacter && !isStaying && !isAttacking)
         {
             UpdateTarget();
@@ -99,6 +102,7 @@ public class AIController : MonoBehaviour
         {
             isAttacking = true;
             StartAttacking(other.gameObject);
+            print (gameObject + " is attacking " + other.gameObject);
         }
         else if (tag == "Enemy")
         {
@@ -150,9 +154,10 @@ public class AIController : MonoBehaviour
         if (navMeshAgent.enabled != false)
         {
             navMeshAgent.destination = target.transform.position;
-            FaceTarget(target.transform);
+            FaceTarget(targetDestination.transform);
         }
-
+            FaceTarget(target.transform);
+            
         if (timeSinceLastAttack > timeBetweenAttacks)
         {
             if (specialAttackChargeUp == abilities.GetChargeRequiredTillSpecial())

@@ -19,6 +19,7 @@ public class Abilities : MonoBehaviour
     [Tooltip("Each simple attack adds a charge.")]
     [SerializeField] int chargeRequiredTillSpecial = 2;
     Health health;
+    float timeSinceLastAttack;
     int specialAttackChargeUp;
 
     public int GetChargeRequiredTillSpecial()
@@ -30,18 +31,26 @@ public class Abilities : MonoBehaviour
     {
         health = GetComponent<Health>();
     }
+    void Update() 
+    {
+        timeSinceLastAttack += Time.deltaTime;
+    }
     void OnAbility()
     {
-
+        // NOTE>>> I subtracted 1 from the timeBetweenAttacks to enable the player to attack more 
+        if (timeSinceLastAttack < GetComponent<AIController>().GetTimeBetweenAttacks() - 1.5) {return;}
         if (specialAttackChargeUp < chargeRequiredTillSpecial)
         {
+            
             Ability();
             specialAttackChargeUp ++;
+            timeSinceLastAttack = 0;
         }
         else
         {
             SpecialAbility();
             specialAttackChargeUp = 0;
+            timeSinceLastAttack = 0;
         }
 
 

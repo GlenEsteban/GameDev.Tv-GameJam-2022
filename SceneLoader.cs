@@ -7,6 +7,7 @@ public class SceneLoader : MonoBehaviour
 {
     [SerializeField] Animator titleTransition;
     [SerializeField] Animator transition;
+    [SerializeField] float titleTransitionTime = 3f;
     [SerializeField] float transitionTime = 1f;
     void OnRestartLevel()
     {
@@ -19,14 +20,15 @@ public class SceneLoader : MonoBehaviour
 
     public void StartGame()
     {
-        titleTransition.SetTrigger("Start");
+        print("start game!");
+        titleTransition.SetTrigger("FirstStart");
         int nextLevelIndex = SceneManager.GetActiveScene().buildIndex + 1;
-        StartCoroutine(LoadLevel(nextLevelIndex, transitionTime));
+        StartCoroutine(LoadLevel(titleTransition, "Start", nextLevelIndex, titleTransitionTime));
     }
     public void RestartLevel()
     {
         int currentLevelIndex = SceneManager.GetActiveScene().buildIndex;
-        StartCoroutine(LoadLevel(currentLevelIndex, transitionTime));
+        StartCoroutine(LoadLevel(transition, "Start", currentLevelIndex, transitionTime));
     }
         public void SkipToNextLevel()
     {
@@ -34,13 +36,13 @@ public class SceneLoader : MonoBehaviour
         if (!isLastLevel)
         {
             int nextLevelIndex = SceneManager.GetActiveScene().buildIndex + 1;
-            StartCoroutine(LoadLevel(nextLevelIndex, transitionTime));
+            StartCoroutine(LoadLevel(transition, "Start", nextLevelIndex, transitionTime));
         }
     }
 
-    IEnumerator LoadLevel(int levelIndex, float waitTime)
+    IEnumerator LoadLevel(Animator animator, string triggerName, int levelIndex, float waitTime)
     {
-        transition.SetTrigger("Start");
+        animator.SetTrigger(triggerName);
         yield return new WaitForSeconds(waitTime);
         SceneManager.LoadScene(levelIndex);
     }

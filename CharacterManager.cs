@@ -11,7 +11,15 @@ public class CharacterManager : MonoBehaviour
 
     public GameObject GetCurrentCharacter()
     {
-        return characters[currentCharacterIndex];
+        if (currentCharacterIndex < 0 || currentCharacterIndex > characters.Count - 1)
+        {
+            print("Strange bug appeared again.");
+            return characters[0];
+        }
+        else
+        {
+            return characters[currentCharacterIndex];
+        }
     }
 
     void Start()
