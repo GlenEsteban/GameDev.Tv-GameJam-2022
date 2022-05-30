@@ -11,6 +11,14 @@ public class Health : MonoBehaviour
     [SerializeField] float deathDecayTime = 1f;
     [SerializeField] float lingerOnDeathTime = 3f;
 
+    public float GetCurrentHealth()
+    {
+        return currentHealth;
+    }
+    public float GetStartingHealth()
+    {
+        return startingHealth;
+    }
     bool isDead;
     bool hasHandledDeath;
     [SerializeField] GameObject corpsePrefab;
@@ -38,16 +46,12 @@ public class Health : MonoBehaviour
 
     void OnCollisionEnter(Collision other) {
         if(other.gameObject.tag == "Projectile")
-        {
-            print(gameObject.name + " got hurt by " + other.gameObject.name);
-            
+        {            
             float damageTaken = other.gameObject.GetComponent<Projectile>().GetDamage();
             TakeDamage(damageTaken);
         }
         if(other.gameObject.tag == "Melee")
         {
-            print(gameObject.name + " got hurt by " + other.gameObject.name);
-
             float damageTaken = other.gameObject.GetComponent<Melee>().GetDamage();
             TakeDamage(damageTaken);
 
@@ -56,6 +60,8 @@ public class Health : MonoBehaviour
                 other.gameObject.GetComponent<Rigidbody>().velocity -= transform.forward * 100;
             }
         }
+        
+        float healthPercent = currentHealth / startingHealth;
     }
         public void TakeDamage(float damage)
     {
@@ -79,8 +85,6 @@ public class Health : MonoBehaviour
             }
             hasHandledDeath = true;
         }
-
-
     }
     void HandleFollowerDeath()
     {

@@ -20,7 +20,7 @@ public class NecromancerAbilities : MonoBehaviour
 
     void OnAbility()
     {
-        print("abilty");
+        // add ability
     }
     void OnSpecialAbility(InputValue value)
     {
