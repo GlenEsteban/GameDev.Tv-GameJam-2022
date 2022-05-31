@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
             AIController = GetComponent<AIController>();
         }
         thisRigidBody = GetComponent<Rigidbody>();
-        
+
         characterManager.AddCharacter(gameObject);
     }
     void Update()

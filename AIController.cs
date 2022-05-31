@@ -102,7 +102,6 @@ public class AIController : MonoBehaviour
         {
             isAttacking = true;
             StartAttacking(other.gameObject);
-            print (gameObject + " is attacking " + other.gameObject);
         }
         else if (tag == "Enemy")
         {
@@ -162,12 +161,14 @@ public class AIController : MonoBehaviour
         {
             if (specialAttackChargeUp == abilities.GetChargeRequiredTillSpecial())
             {
-                BroadcastMessage("SpecialAbility");
+                print("Special attack!");
+                GetComponent<Abilities>().SpecialAbility();
                 specialAttackChargeUp = 0;
             }
             else
             {
-                BroadcastMessage("Ability");
+                print("Ability");
+                GetComponent<Abilities>().Ability();
                 specialAttackChargeUp ++;
             }
 

@@ -31,7 +31,7 @@ public class SceneLoader : MonoBehaviour
         int currentLevelIndex = SceneManager.GetActiveScene().buildIndex;
         StartCoroutine(LoadLevel(transition, "Start", currentLevelIndex, transitionTime));
     }
-        public void SkipToNextLevel()
+    public void SkipToNextLevel()
     {
         bool isLastLevel = (SceneManager.sceneCountInBuildSettings == SceneManager.GetActiveScene().buildIndex);
         if (!isLastLevel)
