@@ -10,6 +10,16 @@ public class HealthBarUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SetUpHealthBarUI();
+    }
+    void Update()
+    {
+        float healthPercent = (health.GetCurrentHealth() / health.GetStartingHealth());
+        image.fillAmount = healthPercent;
+    }
+
+    void SetUpHealthBarUI()
+    {
         Transform character = transform.parent.transform.parent;
         if (character.tag == "Follower")
         {
@@ -21,17 +31,8 @@ public class HealthBarUI : MonoBehaviour
             print("Enemy");
             transform.parent.Find("Cold Heart").gameObject.SetActive(false);
         }
-        else
-        {
-            print("Cant find tag for " + character.name);
-        }
+        
         health = transform.parent.transform.parent.GetComponent<Health>();
         image = GetComponent<Image>();
     }
-
-    void Update()
-    {
-        float healthPercent = (health.GetCurrentHealth() / health.GetStartingHealth());
-        image.fillAmount = healthPercent;
-    }
-}
+}    

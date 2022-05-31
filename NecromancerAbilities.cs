@@ -11,16 +11,22 @@ public class NecromancerAbilities : MonoBehaviour
 
     Health health;
     GameObject corpse;
+    GameObject resurrectFX;
+    ControlsUI controlsUI;
+    CharacterManager characterManager;
     public int followerPrefabIndex;
 
     void Start() 
     {
+        characterManager = FindObjectOfType<CharacterManager>();
         health = GetComponent<Health>();    
+        controlsUI = FindObjectOfType<ControlsUI>();
+        resurrectFX = transform.Find("FX").gameObject;
     }
 
     void OnAbility()
     {
-        // add ability
+        StartCoroutine(ResurrectFX());
     }
     void OnSpecialAbility(InputValue value)
     {
@@ -40,6 +46,9 @@ public class NecromancerAbilities : MonoBehaviour
     void OnTriggerExit()
     {
         followerPrefabIndex = -1;
+        // controlsUI.UpdateResurrect1UI(false);
+        // controlsUI.UpdateResurrect2UI(false);
+
     }
 
     void IdentifyCorpse(GameObject body)
@@ -47,6 +56,15 @@ public class NecromancerAbilities : MonoBehaviour
         if (body.GetComponent<Corpse>() == null) {return;}
         corpse = body;
         followerPrefabIndex = body.GetComponent<Corpse>().GetFollowerPrefabIndex();
+        
+        // if (characterManager.GetCharacterCount() > 1)
+        // {
+        //     controlsUI.UpdateResurrect2UI(true);
+        // }
+        // else
+        // {
+        //     controlsUI.UpdateResurrect1UI(true);
+        // }
     }
 
     void Resurrect()
@@ -56,10 +74,14 @@ public class NecromancerAbilities : MonoBehaviour
             Vector3 followerSpawnPosition = followerSpawnPoint.transform.position;
             Instantiate(followerPrefabs[followerPrefabIndex], followerSpawnPosition, followerSpawnPoint.rotation, gameObject.transform);
             Destroy(corpse);
+            resurrectFX.SetActive(false);
         }
-        else
-        {
-            // Trigger failed spell effects
-        }
+    }
+
+    IEnumerator ResurrectFX()
+    {
+        resurrectFX.SetActive(true);
+        yield return new WaitForSeconds(1.5f);
+        resurrectFX.SetActive(false);
     }
 }

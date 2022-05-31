@@ -8,7 +8,12 @@ public class CharacterManager : MonoBehaviour
     [SerializeField] int currentCharacterIndex = 0;
     [SerializeField] List<GameObject> characters;
     [SerializeField] CinemachineTargetGroup targetGroup;
+    ControlsUI controlsUI;
 
+    public int GetCharacterCount()
+    {
+        return characters.Count;
+    }
     public GameObject GetCurrentCharacter()
     {
         if (currentCharacterIndex < 0 || currentCharacterIndex > characters.Count - 1)
@@ -24,7 +29,9 @@ public class CharacterManager : MonoBehaviour
 
     void Start()
     {
+        controlsUI = FindObjectOfType<ControlsUI>();
         UpdatePlayerController();
+        //UpdateControlsUI();
     }
     
     public void AddCharacter(GameObject character)
@@ -73,6 +80,7 @@ public class CharacterManager : MonoBehaviour
     {
         UpdatePlayerController();
         UpdateCinemachineTargetGroup();
+        //UpdateControlsUI();
     }
     void UpdatePlayerController()
     {
@@ -114,4 +122,41 @@ public class CharacterManager : MonoBehaviour
             }
         }
     }
+
+    // void UpdateControlsUI()
+    // {
+    //     GameObject currentCharacter = GetCurrentCharacter();
+    //     if (currentCharacter.GetComponent<NecromancerAbilities>() != null)
+    //     {
+    //         controlsUI.UpdateFollowerControls1UI(false);
+    //         controlsUI.UpdateFollowerControls2UI(false);
+    //         controlsUI.UpdateMoveUI(true);
+    //         if (characters.Count > 1)
+    //         {
+    //             controlsUI.UpdateSwitchUI(true);
+    //         }
+    //         else
+    //         {
+    //              controlsUI.UpdateSwitchUI(false);
+    //         }
+    //     }
+    //     else if (currentCharacter.tag == "Follower")
+    //     {
+    //         controlsUI.UpdateMoveUI(false);
+    //         controlsUI.UpdateSwitchUI(false);
+    //         controlsUI.UpdateResurrect1UI(false);
+    //         controlsUI.UpdateResurrect2UI(false);
+    //         controlsUI.UpdateFollowerControls1UI(false);
+    //         controlsUI.UpdateFollowerControls2UI(false);
+
+    //         if (currentCharacter.GetComponent<AIController>().GetIsStaying())
+    //         {
+    //             controlsUI.UpdateFollowerControls1UI(true);
+    //         }
+    //         else
+    //         {
+    //             controlsUI.UpdateFollowerControls2UI(true);
+    //         }
+    //     }
+    //}
 }
