@@ -46,8 +46,8 @@ public class NecromancerAbilities : MonoBehaviour
     void OnTriggerExit()
     {
         followerPrefabIndex = -1;
-        // controlsUI.UpdateResurrect1UI(false);
-        // controlsUI.UpdateResurrect2UI(false);
+        controlsUI.UpdateResurrect1UI(false);
+        controlsUI.UpdateResurrect2UI(false);
 
     }
 
@@ -57,14 +57,14 @@ public class NecromancerAbilities : MonoBehaviour
         corpse = body;
         followerPrefabIndex = body.GetComponent<Corpse>().GetFollowerPrefabIndex();
         
-        // if (characterManager.GetCharacterCount() > 1)
-        // {
-        //     controlsUI.UpdateResurrect2UI(true);
-        // }
-        // else
-        // {
-        //     controlsUI.UpdateResurrect1UI(true);
-        // }
+        if (characterManager.GetCharacterCount() > 1)
+        {
+            controlsUI.UpdateResurrect2UI(true);
+        }
+        else
+        {
+            controlsUI.UpdateResurrect1UI(true);
+        }
     }
 
     void Resurrect()

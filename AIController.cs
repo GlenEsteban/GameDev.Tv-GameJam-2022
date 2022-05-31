@@ -16,6 +16,7 @@ public class AIController : MonoBehaviour
     float timeSinceLastAttack;
     int specialAttackChargeUp;
     CharacterManager characterManager;
+    ControlsUI controlsUI;
     Health health;
     Abilities abilities;
     NavMeshAgent navMeshAgent;
@@ -33,6 +34,7 @@ public class AIController : MonoBehaviour
     void Start()
     {
         characterManager = FindObjectOfType<CharacterManager>();
+        controlsUI = FindObjectOfType<ControlsUI>();
         health = GetComponent<Health>();
         abilities = GetComponent<Abilities>();
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -86,6 +88,7 @@ public class AIController : MonoBehaviour
         {
             isStaying = !isStaying;
         }
+        controlsUI.UpdateControlsUI();
     }
 
     void OnTriggerStay(Collider other) 
