@@ -8,14 +8,20 @@ public class NecromancerAbilities : MonoBehaviour
 {
     [SerializeField] GameObject[] followerPrefabs;
     [SerializeField] Transform followerSpawnPoint;
+    [SerializeField] int damageFromResurrection;
 
     Health health;
     GameObject corpse;
     GameObject resurrectFX;
     ControlsUI controlsUI;
     CharacterManager characterManager;
-    public int followerPrefabIndex;
+    int followerPrefabIndex;
+    bool isAbleToResurrect;
 
+    public bool GetIsAbleToResurrect()
+    {
+        return isAbleToResurrect;
+    }
     void Start() 
     {
         characterManager = FindObjectOfType<CharacterManager>();
@@ -31,10 +37,6 @@ public class NecromancerAbilities : MonoBehaviour
     void OnSpecialAbility(InputValue value)
     {
         if (health.GetIsDead()) {return;}
-        if (value.isPressed)
-        {
-            // Show charging UI
-        }
         
         Resurrect();
     }
@@ -46,24 +48,19 @@ public class NecromancerAbilities : MonoBehaviour
     void OnTriggerExit()
     {
         followerPrefabIndex = -1;
-        controlsUI.UpdateResurrect1UI(false);
-        controlsUI.UpdateResurrect2UI(false);
-
     }
 
     void IdentifyCorpse(GameObject body)
     {
-        if (body.GetComponent<Corpse>() == null) {return;}
-        corpse = body;
-        followerPrefabIndex = body.GetComponent<Corpse>().GetFollowerPrefabIndex();
-        
-        if (characterManager.GetCharacterCount() > 1)
+        if (body.GetComponent<Corpse>() != null)
         {
-            controlsUI.UpdateResurrect2UI(true);
+            corpse = body;
+            followerPrefabIndex = body.GetComponent<Corpse>().GetFollowerPrefabIndex();
+            isAbleToResurrect = true;
         }
         else
         {
-            controlsUI.UpdateResurrect1UI(true);
+            isAbleToResurrect = false;
         }
     }
 
@@ -75,6 +72,7 @@ public class NecromancerAbilities : MonoBehaviour
             Instantiate(followerPrefabs[followerPrefabIndex], followerSpawnPosition, followerSpawnPoint.rotation, gameObject.transform);
             Destroy(corpse);
             resurrectFX.SetActive(false);
+            health.TakeDamage(damageFromResurrection);
         }
     }
 
