@@ -66,6 +66,7 @@ public class AIController : MonoBehaviour
         }
         else if (isCurrentCharacter || isStaying && !isAttacking)
         {
+            if (tag == "Enemy") {return;}
             StopFollowing();
         }
     }
@@ -164,13 +165,11 @@ public class AIController : MonoBehaviour
         {
             if (specialAttackChargeUp == abilities.GetChargeRequiredTillSpecial())
             {
-                print("Special attack!");
                 GetComponent<Abilities>().SpecialAbility();
                 specialAttackChargeUp = 0;
             }
             else
             {
-                print("Ability");
                 GetComponent<Abilities>().Ability();
                 specialAttackChargeUp ++;
             }
