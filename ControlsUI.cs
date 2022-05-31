@@ -14,7 +14,6 @@ public class ControlsUI : MonoBehaviour
     void Start() 
     {
         characterManager = FindObjectOfType<CharacterManager>();
-        
         moveUI = transform.Find("Move").gameObject;
         switchUI = transform.Find("Switch").gameObject;
         resurrect1UI = transform.Find("Resurrect 1").gameObject;
@@ -50,22 +49,33 @@ public class ControlsUI : MonoBehaviour
     {
         followerControls2UI.SetActive(state);
     }
+
+    private void Update() {
+        UpdateControlsUI();
+    }
     public void UpdateControlsUI()
     {
         GameObject currentCharacter = characterManager.GetCurrentCharacter();
         int characterCount = characterManager.GetCharacterCount();
         if (currentCharacter.tag == "Necromancer")
         {
+            UpdateMoveUI(false);
+            UpdateSwitchUI(false);
+            UpdateResurrect1UI(false);
+            UpdateResurrect2UI(false);
             UpdateFollowerControls1UI(false);
             UpdateFollowerControls2UI(false);
+
             UpdateMoveUI(true);
+            
             if (characterCount > 1)
             {
                 UpdateSwitchUI(true);
+                UpdateResurrect2UI(true);
             }
             else
             {
-                UpdateSwitchUI(false);
+                UpdateResurrect1UI(true);
             }
         }
         else if (currentCharacter.tag == "Follower")
