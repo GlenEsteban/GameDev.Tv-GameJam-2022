@@ -119,7 +119,7 @@ public class Health : MonoBehaviour
         }
         GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
 
-        transform.Rotate(.5f, 0f, 0f);
+        // Play death effect / animation
     }
     void DropCorpse()
     {

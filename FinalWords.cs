@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class FinalWords : MonoBehaviour
 {
@@ -26,5 +27,7 @@ public class FinalWords : MonoBehaviour
     {
         yield return new WaitForSeconds(timeTilTransition);
         animator.SetTrigger("End");
+        yield return new WaitForSeconds(timeTilTransition);
+        SceneManager.LoadScene(0);
     }
 }
