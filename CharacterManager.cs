@@ -33,6 +33,14 @@ public class CharacterManager : MonoBehaviour
         controlsUI = FindObjectOfType<ControlsUI>();
         UpdatePlayerController();
     }
+
+    void Update() 
+    {
+        if (currentCharacterIndex >= characters.Count)
+        {
+            currentCharacterIndex = 0;
+        }
+    }
     
     public void AddCharacter(GameObject character)
     {

@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 public class AIController : MonoBehaviour
 {
     [Header("Attack Configurations")]
-    [SerializeField] float chaseDistance = 6f;
+    [SerializeField] float chaseDistance = 10f;
     [SerializeField] float timeBetweenAttacks = 1f;
     bool isCurrentCharacter;
     bool isStaying = false;
@@ -41,7 +41,7 @@ public class AIController : MonoBehaviour
 
         GetComponent<SphereCollider>().radius = chaseDistance;
 
-        if (transform.parent.tag == "Necromancer")
+        if (transform.parent != null && transform.parent.tag == "Necromancer")
         {
             tag = "Follower";
             transform.parent = FindObjectOfType<CharacterManager>().transform;
@@ -66,7 +66,6 @@ public class AIController : MonoBehaviour
         }
         else if (isCurrentCharacter || isStaying && !isAttacking)
         {
-            if (tag == "Enemy") {return;}
             StopFollowing();
         }
     }
@@ -154,6 +153,8 @@ public class AIController : MonoBehaviour
     }
     void StartAttacking(GameObject target)
     {
+        chaseDistance = 30f;
+        GetComponent<SphereCollider>().radius = chaseDistance;
         if (navMeshAgent.enabled != false)
         {
             navMeshAgent.destination = target.transform.position;
